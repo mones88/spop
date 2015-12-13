@@ -28,7 +28,7 @@
 
 #include <glib.h>
 
-#define SPOP_VERSION "0.0.1"
+#define SPOP_VERSION "0.0.1-TIDAL"
 #define SPOP_YEAR    "2010, 2011, 2012, 2013, 2014, 2015"
 
 /* Verbosity */

@@ -98,7 +98,7 @@ static sp_session_callbacks g_sp_session_callbacks = {
 /**********************
  *** Init functions ***
  **********************/
-void session_init() {
+void session_init_REPLACED() {
     sp_error error;
     gchar* cache_path;
     gchar* settings_path;
@@ -138,8 +138,8 @@ void session_init() {
         .api_version = SPOTIFY_API_VERSION,
         .cache_location = cache_path,
         .settings_location = settings_path,
-        .application_key = g_appkey,
-        .application_key_size = g_appkey_size,
+        /*.application_key = g_appkey,
+        .application_key_size = g_appkey_size,*/
         .user_agent = "spop " SPOP_VERSION,
         .callbacks = &g_sp_session_callbacks,
         .userdata = NULL,
@@ -181,14 +181,14 @@ void session_init() {
     g_debug("Session created.");
 }
 
-void session_login(const char* username, const char* password) {
+void session_login_REPLACED(const char* username, const char* password) {
     g_debug("Logging in...");
     if (!g_session)
         g_error("Session is not ready.");
 
     sp_session_login(g_session, username, password, TRUE, NULL);
 }
-void session_logout() {
+void session_logout_REPLACED() {
     g_debug("Logging out...");
     if (g_session)
         sp_session_logout(g_session);
@@ -198,11 +198,11 @@ void session_logout() {
 /***************************
  *** Playlist management ***
  ***************************/
-int playlists_len() {
+int playlists_len_REPLACED() {
     return sp_playlistcontainer_num_playlists(g_container) + 1; /* +1 for "starred" playlist */
 }
 
-sp_playlist* playlist_get(int nb) {
+sp_playlist* playlist_get_REPLACED(int nb) {
     if (nb == 0) {
         if (g_starred_playlist == NULL)
             g_starred_playlist = sp_session_starred_create(g_session);
@@ -216,7 +216,7 @@ sp_playlist* playlist_get_from_link(sp_link* lnk) {
     return sp_playlist_create(g_session, lnk);
 }
 
-sp_playlist_type playlist_type(int nb) {
+sp_playlist_type playlist_type_REPLACED(int nb) {
     if (nb == 0)
         return SP_PLAYLIST_TYPE_PLAYLIST;
     else

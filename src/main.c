@@ -52,13 +52,14 @@ extern int daemon(int, int);
 #include "plugin.h"
 #include "queue.h"
 #include "spotify.h"
+#include "tidal.h"
 
 static const char* copyright_notice =
     "spop Copyright (C) " SPOP_YEAR " Thomas Jost and the spop contributors\n"
     "This program comes with ABSOLUTELY NO WARRANTY.\n"
     "This is free software, and you are welcome to redistribute it under certain conditions.\n"
     "See the COPYING file bundled with this program for details.\n"
-    "Powered by SPOTIFY(R) CORE\n";
+    "Powered by TIDAL\n";
 
 /***************************************
  *** Global variables and prototypes ***
@@ -147,8 +148,8 @@ int main(int argc, char** argv) {
     exit_handler_init();
 
     /* Read username and password */
-    username = config_get_string("spotify_username");
-    password = config_get_string("spotify_password");
+    username = config_get_string("tidal_username");
+    password = config_get_string("tidal_password");
 
     /* Init plugins */
     plugins_init();

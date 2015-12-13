@@ -32,4 +32,7 @@
 void g_string_replace(GString* str, const char* old, const gchar* new);
 void g_string_append_line_number(GString* str, int nb, int max_nb);
 
+char * encode_post_body_params(int count, ...);
+//char * encode_url_string_with_params(const char *url, int count, ...);
+
 #endif

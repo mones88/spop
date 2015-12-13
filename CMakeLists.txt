@@ -29,6 +29,25 @@ project(spop C)
 find_package(PkgConfig)
 set(targets)
 
+
+#pkg_check_modules(PC_LIBSOUP REQUIRED libsoup-2.4)
+#FIND_PATH(LIBSOUP_INCLUDE_DIRS
+ #       NAMES libsoup/soup.h
+  #      HINTS ${PC_LIBSOUP_INCLUDEDIR}
+   #     ${PC_LIBSOUP_INCLUDE_DIRS}
+    #    PATH_SUFFIXES libsoup-2.4
+#        )
+#
+#FIND_LIBRARY(LIBSOUP_LIBRARIES
+ #       NAMES soup-2.4
+  #      HINTS ${PC_LIBSOUP_LIBDIR}
+   #     ${PC_LIBSOUP_LIBRARY_DIRS}
+    #    )
+
+#INCLUDE(FindPackageHandleStandardArgs)
+#FIND_PACKAGE_HANDLE_STANDARD_ARGS(LibSoup REQUIRED_VARS LIBSOUP_INCLUDE_DIRS LIBSOUP_LIBRARIES
+ #       VERSION_VAR   PC_LIBSOUP_VERSION)
+
 # Check for libspotify
 pkg_check_modules(SPOTIFY REQUIRED libspotify>=12.1.45)
 string(REPLACE ";" " " SPOTIFY_CFLAGS "${SPOTIFY_CFLAGS}")
@@ -42,6 +61,8 @@ pkg_check_modules(GTHREAD2 REQUIRED gthread-2.0)
 string(REPLACE ";" " " GTHREAD2_CFLAGS "${GTHREAD2_CFLAGS}")
 pkg_check_modules(JSON_GLIB REQUIRED json-glib-1.0>=0.12)
 string(REPLACE ";" " " JSON_GLIB_CFLAGS "${JSON_GLIB_CFLAGS}")
+pkg_check_modules(SOUP REQUIRED libsoup-2.4)
+string(REPLACE ";" " " SOUP_CFLAGS "${SOUP_CFLAGS}")
 
 # Check for optional headers
 check_include_files("sys/soundcard.h" HAVE_SYS_SOUNDCARD_H)
@@ -55,14 +76,11 @@ pkg_check_modules(GIO_UNIX gio-unix-2.0)
 string(REPLACE ";" " " GIO_UNIX_CFLAGS "${GIO_UNIX_CFLAGS}")
 pkg_check_modules(NOTIFY libnotify)
 string(REPLACE ";" " " NOTIFY_CFLAGS "${NOTIFY_CFLAGS}")
-pkg_check_modules(SOUP libsoup-2.4)
-string(REPLACE ";" " " SOUP_CFLAGS "${SOUP_CFLAGS}")
 pkg_check_modules(SOX sox)
 string(REPLACE ";" " " SOX_CFLAGS "${SOX_CFLAGS}")
 
 # spop daemon
 set(SPOPD
-  src/appkey.c
   src/commands.c
   src/config.c
   src/interface.c
@@ -72,14 +90,14 @@ set(SPOPD
   src/sd-daemon.c
   src/spotify.c
   src/utils.c
-)
+        src/tidal.c src/tidal.h src/tidal/tidal-config.c src/tidal/tidal-config.h src/tidal/tidal-session.c src/tidal/tidal-session.h src/tidal/tidal-models.c src/tidal/tidal-models.h)
 add_executable(spopd ${SPOPD})
 
 set_target_properties(spopd PROPERTIES
-  COMPILE_FLAGS "${SPOTIFY_CFLAGS} ${GLIB2_CFLAGS} ${GMODULE2_CFLAGS} ${GTHREAD2_CFLAGS} ${JSON_GLIB_CFLAGS}"
+  COMPILE_FLAGS "${SPOTIFY_CFLAGS} ${GLIB2_CFLAGS} ${GMODULE2_CFLAGS} ${GTHREAD2_CFLAGS} ${JSON_GLIB_CFLAGS} ${SOUP_CFLAGS}"
 )
 target_link_libraries(spopd dl ${SPOTIFY_LIBRARIES} ${GLIB2_LIBRARIES}
-  ${GMODULE2_LIBRARIES} ${GTHREAD2_LIBRARIES} ${JSON_GLIB_LIBRARIES})
+  ${GMODULE2_LIBRARIES} ${GTHREAD2_LIBRARIES} ${JSON_GLIB_LIBRARIES} ${LIBSOUP_LIBRARIES})
 set(targets ${targets} spopd)
 
 # Apple specific stuff

@@ -24,6 +24,9 @@
  */
 
 #include <glib.h>
+#include <string.h>
+#include <stdlib.h>
+#include <stdio.h>
 
 #include "utils.h"
 
@@ -50,3 +53,45 @@ void g_string_append_line_number(GString* str, int nb, int max_nb) {
     g_snprintf(fs, sizeof(fs), "%%%dd", nb_digits);
     g_string_append_printf(str, fs, nb);
 }
+
+char * encode_post_body_params(int count, ...) {
+    char *result = malloc(sizeof(char));
+    size_t resultSize = 1; //space for NULL termination
+    va_list ap;
+    va_start(ap, count);
+    for (int i = 0; i < count / 2; i++) {
+        char *key = va_arg(ap, char*);
+        char *value = va_arg(ap, char*);
+        size_t expandBy = strlen(key) + strlen(value) + 2; //key=value&
+        resultSize += expandBy;
+        result = realloc(result, resultSize * sizeof(char));
+        strcat(result, key);
+        strcat(result, "=");
+        strcat(result, value);
+        strcat(result, "&");
+    }
+    strcat(result, "\0");
+    return result;
+}
+
+/*char * encode_url_string_with_params(const char *url, int count, ...) {
+    size_t urlStringLength = strlen(url);
+    char *result = malloc((urlStringLength + 1) * sizeof(char));
+    sprintf(result, "%s?", url);
+    size_t resultSize = urlStringLength + 1; //space for NULL termination
+    va_list ap;
+    va_start(ap, count);
+    for (int i = 0; i < count / 2; i++) {
+        char *key = va_arg(ap, char*);
+        char *value = va_arg(ap, char*);
+        size_t expandBy = strlen(key) + strlen(value) + 2; //key=value&
+        resultSize += expandBy;
+        result = realloc(result, resultSize * sizeof(char));
+        strcat(result, key);
+        strcat(result, "=");
+        strcat(result, value);
+        strcat(result, "&");
+    }
+    strcat(result, "\0");
+    return result;
+}*/

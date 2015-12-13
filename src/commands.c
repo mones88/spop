@@ -37,6 +37,7 @@
 #include "queue.h"
 #include "spotify.h"
 #include "utils.h"
+#include "tidal.h"
 
 /* {{{ JSON helpers */
 #define jb_add_bool(jb, name, val) {\
