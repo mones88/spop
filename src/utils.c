@@ -27,7 +27,6 @@
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
-
 #include "utils.h"
 
 /* Replace all occurences of old by new in str
@@ -74,24 +73,35 @@ char * encode_post_body_params(int count, ...) {
     return result;
 }
 
-/*char * encode_url_string_with_params(const char *url, int count, ...) {
-    size_t urlStringLength = strlen(url);
-    char *result = malloc((urlStringLength + 1) * sizeof(char));
-    sprintf(result, "%s?", url);
-    size_t resultSize = urlStringLength + 1; //space for NULL termination
-    va_list ap;
-    va_start(ap, count);
-    for (int i = 0; i < count / 2; i++) {
-        char *key = va_arg(ap, char*);
-        char *value = va_arg(ap, char*);
-        size_t expandBy = strlen(key) + strlen(value) + 2; //key=value&
-        resultSize += expandBy;
-        result = realloc(result, resultSize * sizeof(char));
-        strcat(result, key);
-        strcat(result, "=");
-        strcat(result, value);
-        strcat(result, "&");
-    }
-    strcat(result, "\0");
-    return result;
-}*/
+char * string_copy_new(const char *src) {
+    if (src == NULL)
+        return NULL;
+
+    size_t srcLen = strlen(src);
+    char *copy = malloc(sizeof(char) * (srcLen + 1));
+    snprintf(copy, srcLen, "%s", src);
+    return copy;
+}
+
+char * json_helper_get_string(JsonReader *reader, const char *elementName) {
+    json_reader_read_member(reader, elementName);
+    const char * value = json_reader_get_string_value(reader);
+    char * copiedValue = malloc(sizeof(char) * (strlen(value) + 1));
+    strcpy(copiedValue, value);
+    json_reader_end_member(reader);
+    return copiedValue;
+}
+
+gint64 json_helper_get_int(JsonReader *reader, const char *elementName) {
+    json_reader_read_member(reader, elementName);
+    gint64 value = json_reader_get_int_value(reader);
+    json_reader_end_member(reader);
+    return value;
+}
+
+gboolean json_helper_get_bool(JsonReader *reader, const char *elementName) {
+    json_reader_read_member(reader, elementName);
+    gboolean value = json_reader_get_boolean_value(reader);
+    json_reader_end_member(reader);
+    return value;
+}

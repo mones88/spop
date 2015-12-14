@@ -27,12 +27,17 @@
 #define UTILS_H
 
 #include <glib.h>
+#include <json-glib/json-glib.h>
 
 /* String manipulation */
 void g_string_replace(GString* str, const char* old, const gchar* new);
 void g_string_append_line_number(GString* str, int nb, int max_nb);
-
 char * encode_post_body_params(int count, ...);
-//char * encode_url_string_with_params(const char *url, int count, ...);
+char * string_copy_new(const char *src);
+
+/* JSON */
+char * json_helper_get_string(JsonReader *reader, const char *elementName);
+gint64 json_helper_get_int(JsonReader *reader, const char *elementName);
+gboolean json_helper_get_bool(JsonReader *reader, const char *elementName);
 
 #endif

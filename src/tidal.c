@@ -34,15 +34,9 @@ void session_logout() {
     tidal_session_end();
 }
 
-int playlists_len() {
-    get_user_playlists();
-    return 0;
-}
-
 sp_playlist* playlist_get(int nb) {
     return NULL;
 }
-
 sp_playlist_type playlist_type(int nb) {
-
+    return SP_PLAYLIST_TYPE_PLAYLIST;
 }
